@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { UserService } from './user.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -16,14 +17,16 @@ export class UserController {
         return this.userService.createUser(userData);
     }
 
+    @UseGuards(AuthGuard)
     @Get(':id')
-    async getUserById(@Param('id') id: string): Promise<User> {
+    async getUserById(@Param('id') id: string): Promise<Omit<User, 'password'>> {
         const user = await this.userService.getUserById({ id: Number(id) });
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found!`);
         }
 
-        return user;
+        const { password, ...result } = user;
+        return result;
     }
 
     @Put(':id')
@@ -40,7 +43,7 @@ export class UserController {
 
     @Delete(':id')
     async deleteUserById(@Param('id') id: string): Promise<User> {
-        return this.userService.deleteUser({id: Number(id)})
+        return this.userService.deleteUser({ id: Number(id) })
     }
 
 }
