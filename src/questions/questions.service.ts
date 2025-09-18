@@ -9,11 +9,9 @@ export class QuestionsService {
   @Inject()
   private readonly prisma: PrismaService;
 
-
-  async create(createQuestionDto: CreateQuestionDto) {
-    const userId = 1;
+  async create(createQuestionDto: CreateQuestionDto, userId: number) {
     return await this.prisma.questions.create({
-      data: {...createQuestionDto, userId}
+      data: { ...createQuestionDto, userId }
     });
   }
 
@@ -22,17 +20,17 @@ export class QuestionsService {
   }
 
   async findOne(id: number) {
-    return await this.prisma.questions.findUnique({where: {id}})
+    return await this.prisma.questions.findUnique({ where: { id } })
   }
 
   async update(id: number, updateQuestionDto: UpdateQuestionDto) {
     return await this.prisma.questions.update({
-      where: {id},
+      where: { id },
       data: updateQuestionDto
     })
   }
 
   async remove(id: number) {
-    return await this.prisma.questions.delete({where:{id}})
+    return await this.prisma.questions.delete({ where: { id } })
   }
 }
