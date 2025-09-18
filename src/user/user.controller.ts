@@ -20,15 +20,16 @@ export class UserController {
     @UseGuards(AuthGuard)
     @Get(':id')
     async getUserById(@Param('id') id: string): Promise<Omit<User, 'password'>> {
-        const user = await this.userService.getUserById({ id: Number(id) });
-        if (!user) {
+        const data = await this.userService.getUserById({ id: Number(id) });
+        if (!data) {
             throw new NotFoundException(`User with id ${id} not found!`);
         }
 
-        const { password, ...result } = user;
-        return result;
+        const { password, ...user } = data;
+        return user;
     }
 
+    
     @Put(':id')
     async updateUser(
         @Param('id') id: string,
