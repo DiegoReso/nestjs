@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -19,8 +19,8 @@ export class UserController {
 
     @UseGuards(AuthGuard)
     @Get(':id')
-    async getUserById(@Param('id') id: string): Promise<Omit<User, 'password'>> {
-        const data = await this.userService.getUserById({ id: Number(id) });
+    async getUserById(@Param('id', ParseIntPipe) id: number): Promise<Omit<User, 'password'>> {
+        const data = await this.userService.getUserById({ id });
         if (!data) {
             throw new NotFoundException(`User with id ${id} not found!`);
         }
@@ -29,22 +29,23 @@ export class UserController {
         return user;
     }
 
-    
-    @Put(':id')
+    @UseGuards(AuthGuard)
+    @Patch(':id')
     async updateUser(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Body() userData: Prisma.UserUpdateInput
     ): Promise<User> {
         const user = await this.userService.updateUser({
-            where: { id: Number(id) }, data: userData
+            where: { id }, data: userData
         })
 
         return user;
     }
 
+    @UseGuards(AuthGuard)
     @Delete(':id')
-    async deleteUserById(@Param('id') id: string): Promise<User> {
-        return this.userService.deleteUser({ id: Number(id) })
+    async deleteUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+        return this.userService.deleteUser({ id })
     }
 
 }
