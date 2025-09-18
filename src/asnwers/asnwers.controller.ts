@@ -4,7 +4,7 @@ import { CreateAsnwerDto } from './dto/create-asnwer.dto';
 import { UpdateAsnwerDto } from './dto/update-asnwer.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
-@Controller('asnwers')
+@Controller('answers')
 export class AsnwersController {
   constructor(private readonly asnwersService: AsnwersService) {}
 

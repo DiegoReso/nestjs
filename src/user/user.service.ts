@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { Asnwer } from 'src/asnwers/entities/asnwer.entity';
 
 
 
@@ -16,6 +17,13 @@ export class UserService {
     ): Promise<User | null> {
         return this.prisma.user.findUnique({
             where: userWhereUniqueInput,
+            include:{
+                questions: {
+                    include:{
+                        answers: true
+                    }
+                }
+            }
         });
     }
 
