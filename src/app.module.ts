@@ -6,10 +6,20 @@ import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 import { QuestionsModule } from './questions/questions.module';
 import { AsnwersModule } from './asnwers/asnwers.module';
+import { APP_PIPE } from '@nestjs/core';
+import { ValidationPipe } from './validation/validation.pipe';
 
 @Module({
-  imports: [AuthModule, UserModule, DatabaseModule, QuestionsModule, AsnwersModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    DatabaseModule,
+    QuestionsModule,
+    AsnwersModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    { provide: APP_PIPE, useClass: ValidationPipe },
+    AppService
+  ]
 })
-export class AppModule {}
+export class AppModule { }

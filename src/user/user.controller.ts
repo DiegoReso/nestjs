@@ -2,6 +2,9 @@ import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, ParseI
 import { Prisma, User } from '@prisma/client';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ValidationPipe } from 'src/validation/validation.pipe';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -12,7 +15,7 @@ export class UserController {
 
     @Post()
     async singupUser(
-        @Body() userData: Prisma.UserCreateInput,
+       @Body(new ValidationPipe()) userData: CreateUserDTO,
     ): Promise<User> {
         return this.userService.createUser(userData);
     }
@@ -33,7 +36,7 @@ export class UserController {
     @Patch(':id')
     async updateUser(
         @Param('id', ParseIntPipe) id: number,
-        @Body() userData: Prisma.UserUpdateInput
+        @Body(new ValidationPipe()) userData: UpdateUserDTO
     ): Promise<User> {
         const user = await this.userService.updateUser({
             where: { id }, data: userData
