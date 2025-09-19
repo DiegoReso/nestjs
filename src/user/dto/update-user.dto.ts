@@ -3,17 +3,17 @@ import { CreateUserDTO } from "./create-user.dto"
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator"
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {
-    @IsString()
-    @MinLength(3)
-    @IsNotEmpty()
+    @IsString({ message: "The name must be a string" })
+    @MinLength(3, { message: "The name must be at least 3 characters long." })
+    @IsNotEmpty({ message: "The name cannot be empty" })
     name: string
 
-    @IsEmail()
-    @IsNotEmpty()
+    @IsEmail({}, { message: "The email must be a valid email address." })
+    @IsNotEmpty({ message: "The email cannot be empty" })
     email: string
 
-    @MinLength(6)
-    @IsNotEmpty()
-    @IsString()
+    @IsString({ message: "The password must be a string." })
+    @MinLength(6, { message: "The password must be at least 6 characters long." })
+    @IsNotEmpty({ message: "The password cannot be empty." })
     password: string
 }

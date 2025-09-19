@@ -13,7 +13,6 @@ export class ValidationPipe implements PipeTransform<any> {
         const errors = await validate(object);
 
         if (errors.length > 0) {
-            // Mapeia os erros para um array de strings
             const errorMessages = errors.flatMap(error => Object.values(error.constraints ?? {}));
             
             throw new BadRequestException(errorMessages);
